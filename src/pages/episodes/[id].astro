@@ -1,0 +1,112 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import VideoFacade from '../../components/VideoFacade.astro';
+
+export async function getStaticPaths() {
+  const episodes = await getCollection('episodes', (ep) => ep.data.status === 'published');
+  return episodes.map((ep) => ({ params: { id: ep.id }, props: { ep } }));
+}
+
+const { ep } = Astro.props;
+const { Content } = await render(ep);
+const number = String(ep.data.number).padStart(2, '0');
+const date = ep.data.date?.toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
+---
+
+<Base title={ep.data.title} description={ep.data.summary}>
+  <article class="wrap episode">
+    <header>
+      <p class="label">Episode {number}{date && ` · ${date}`}</p>
+      <h1>{ep.data.title}</h1>
+      {ep.data.summary && <p class="summary">{ep.data.summary}</p>}
+    </header>
+
+    {ep.data.youtubeId && <VideoFacade id={ep.data.youtubeId} number={number} title={ep.data.title} />}
+
+    <div class="prose">
+      {
+        ep.data.question && (
+          <>
+            <h2>The question</h2>
+            <blockquote>{ep.data.question}</blockquote>
+          </>
+        )
+      }
+
+      <h2>Transcript</h2>
+      <Content />
+
+      {
+        ep.data.sources.length > 0 && (
+          <>
+            <h2>Sources</h2>
+            <ol class="sources">
+              {ep.data.sources.map((s) => (
+                <li>{s.url ? <a href={s.url}>{s.cite}</a> : s.cite}</li>
+              ))}
+            </ol>
+          </>
+        )
+      }
+
+      <p class="back label"><a href="/">← All episodes</a></p>
+    </div>
+  </article>
+</Base>
+
+<style>
+  .episode {
+    padding-top: clamp(2rem, 8vh, 4.5rem);
+  }
+
+  header {
+    margin-bottom: 2.5rem;
+  }
+
+  header .label {
+    margin: 0 0 0.75rem;
+  }
+
+  h1 {
+    margin: 0;
+    font-weight: 400;
+    font-size: clamp(2rem, 6vw, 3rem);
+    line-height: 1.15;
+    color: var(--ink);
+  }
+
+  .summary {
+    max-width: var(--measure);
+    margin: 1rem 0 0;
+    font-size: 1.1rem;
+    color: var(--text);
+  }
+
+  .prose {
+    margin-top: 1rem;
+  }
+
+  .sources {
+    padding-left: 1.4em;
+    font-size: 0.95rem;
+  }
+
+  .sources li {
+    margin-bottom: 0.5em;
+  }
+
+  .sources li::marker {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+
+  .back {
+    margin-top: 3.5rem;
+  }
+
+  .back a {
+    text-decoration: none;
+  }
+</style>

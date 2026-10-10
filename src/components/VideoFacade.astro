@@ -1,0 +1,105 @@
+---
+// Nothing is loaded from YouTube until the viewer presses play, so the site sets no cookies
+// and needs no consent banner. The placeholder repeats the videos' own title card.
+interface Props {
+  id: string;
+  number: string;
+  title: string;
+}
+
+const { id, number, title } = Astro.props;
+---
+
+<div class="video" data-youtube-id={id}>
+  <button type="button" aria-label={`Play “${title}” (loads YouTube)`}>
+    <span class="numeral">{number}</span>
+    <span class="title">{title}</span>
+    <span class="rule" aria-hidden="true"></span>
+    <span class="hint">Play · loads YouTube</span>
+  </button>
+</div>
+<p class="external"><a href={`https://www.youtube.com/watch?v=${id}`}>Watch on YouTube</a></p>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.video[data-youtube-id]').forEach((box) => {
+    const button = box.querySelector('button');
+    button?.addEventListener('click', () => {
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://www.youtube-nocookie.com/embed/${box.dataset.youtubeId}?autoplay=1&rel=0`;
+      iframe.title = button.getAttribute('aria-label') ?? 'Video';
+      iframe.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+      iframe.allowFullscreen = true;
+      box.replaceChildren(iframe);
+    });
+  });
+</script>
+
+<style>
+  .video {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    background: radial-gradient(ellipse 70% 60% at 50% 45%, var(--ground-lit), #0a0a0a 80%);
+    border: 1px solid var(--rule);
+  }
+
+  .video :global(iframe),
+  button {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    background: none;
+    color: var(--ink);
+    font-family: var(--serif);
+    cursor: pointer;
+  }
+
+  .numeral {
+    font-size: clamp(2rem, 6vw, 3.4rem);
+    line-height: 1;
+  }
+
+  .title {
+    font-size: clamp(1.1rem, 3vw, 1.8rem);
+  }
+
+  .rule {
+    width: 7rem;
+    height: 2px;
+    margin-top: 0.6rem;
+    background: var(--red);
+  }
+
+  .hint {
+    margin-top: 1.4rem;
+    font-family: var(--mono);
+    font-weight: 500;
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  button:hover .hint {
+    color: var(--ink);
+  }
+
+  .external {
+    margin: 0.75rem 0 0;
+    font-family: var(--mono);
+    font-weight: 500;
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+</style>
