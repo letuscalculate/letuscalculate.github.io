@@ -3,7 +3,7 @@ number: 1
 title: "On Borrowed Reasons"
 status: published
 date: 2026-10-11
-youtubeId: "zSkBCTAT0vE"
+youtubeId: "gVWEQzIBQQ4"
 summary: "Two students each ask a language model, swap the answers, and agree on a conclusion. Neither of them looked at the evidence. Whose judgment is it?"
 question: "When a person and a language model reach a judgment together, how much of the reasoning does the person need to have themselves?"
 sources:
