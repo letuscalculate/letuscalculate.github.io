@@ -14,7 +14,7 @@ const number = String(ep.data.number).padStart(2, '0');
 const date = ep.data.date?.toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
 ---
 
-<Base title={ep.data.title} description={ep.data.summary}>
+<Base title={ep.data.title} description={ep.data.summary} image={ep.data.cover}>
   <article class="wrap episode">
     <header>
       <p class="label">Episode {number}{date && ` · ${date}`}</p>
@@ -22,7 +22,7 @@ const date = ep.data.date?.toLocaleDateString('en-GB', { year: 'numeric', month:
       {ep.data.summary && <p class="summary">{ep.data.summary}</p>}
     </header>
 
-    {ep.data.youtubeId && <VideoFacade id={ep.data.youtubeId} number={number} title={ep.data.title} />}
+    {ep.data.youtubeId && <VideoFacade id={ep.data.youtubeId} number={number} title={ep.data.title} cover={ep.data.cover} />}
 
     <div class="prose">
       {

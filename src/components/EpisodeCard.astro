@@ -1,0 +1,111 @@
+---
+// One episode as cover + title, the way a channel page lists videos.
+// `featured` is the newest episode: full width, larger title, with its summary.
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  ep: CollectionEntry<'episodes'>;
+  featured?: boolean;
+}
+
+const { ep, featured = false } = Astro.props;
+const { number, title, status, date, cover, summary } = ep.data;
+const href = status === 'published' ? `/episodes/${ep.id}/` : undefined;
+const Link = href ? 'a' : 'div';
+const num = String(number).padStart(2, '0');
+const when =
+  status === 'published' && date
+    ? date.toLocaleDateString('en-GB', { year: 'numeric', month: 'short', day: 'numeric' })
+    : 'Forthcoming';
+---
+
+<article class:list={['card', { featured }]}>
+  <Link class="cover" href={href} tabindex={href ? '-1' : undefined} aria-hidden="true">
+    {
+      cover ? (
+        <img src={cover} alt="" width="1280" height="720" loading={featured ? 'eager' : 'lazy'} decoding="async" />
+      ) : (
+        <span class="blank">{num}</span>
+      )
+    }
+  </Link>
+  <h3 class="title">{href ? <a href={href}>{title}</a> : title}</h3>
+  <p class="meta">Ep {num} · {when}</p>
+  {featured && summary && <p class="summary">{summary}</p>}
+</article>
+
+<style>
+  .card {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cover {
+    display: block;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: var(--ground-lit);
+  }
+
+  .cover img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: filter 0.2s ease;
+  }
+
+  a.cover:hover img {
+    filter: brightness(1.12);
+  }
+
+  .blank {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    font-family: var(--serif);
+    font-size: 2.5rem;
+    color: var(--faint);
+  }
+
+  .title {
+    margin: 0.85rem 0 0;
+    font-weight: 400;
+    font-size: 1.2rem;
+    line-height: 1.3;
+    color: var(--ink);
+  }
+
+  .title a {
+    text-decoration: none;
+  }
+
+  .card:has(a.cover:hover) .title a,
+  .title a:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--red);
+  }
+
+  .meta {
+    margin: 0.35rem 0 0;
+    font-family: var(--mono);
+    font-weight: 500;
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .featured .title {
+    margin-top: 1.1rem;
+    font-size: clamp(1.5rem, 3.5vw, 2rem);
+    line-height: 1.2;
+  }
+
+  .summary {
+    max-width: var(--measure);
+    margin: 0.9rem 0 0;
+    color: var(--text);
+  }
+</style>
