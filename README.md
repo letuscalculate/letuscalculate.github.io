@@ -1,6 +1,6 @@
-# Calculemus
+# Let Us Calculate
 
-Website for the Calculemus channel (YouTube @letuscalculate). Astro, deployed to GitHub Pages on push to `main`.
+Website for the Let Us Calculate channel (YouTube @letuscalculate; the name translates Leibniz’s *calculemus*). Astro, deployed to GitHub Pages on push to `main`.
 
 ```bash
 pnpm install

@@ -6,7 +6,7 @@ interface Props {
   description?: string;
 }
 
-const site = 'Calculemus';
+const site = 'Let Us Calculate';
 const { title, description = 'Philosophy, cognitive science and linguistics in an age of AI.' } = Astro.props;
 const pageTitle = title ? `${title} · ${site}` : site;
 const canonical = new URL(Astro.url.pathname, Astro.site);
@@ -35,9 +35,9 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
   </head>
   <body>
     <header class="site-header wrap">
-      <a class="brand" href="/" aria-label="Calculemus, home">
+      <a class="brand" href="/" aria-label="Let Us Calculate, home">
         <img src="/avatar.png" alt="" width="28" height="28" />
-        <span>Calculemus</span>
+        <span>Let Us Calculate</span>
       </a>
       <nav aria-label="Site">
         <a href="/about" aria-current={path === '/about' ? 'page' : undefined}>About</a>
@@ -48,7 +48,7 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
       <slot />
     </main>
     <footer class="site-footer wrap">
-      <span>© 2026 Calculemus</span>
+      <span>© 2026 Let Us Calculate</span>
     </footer>
   </body>
 </html>
